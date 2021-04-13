@@ -5,8 +5,9 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Book;
+use Carbon\Carbon;
 
-class BookReservationTest extends TestCase
+class BookManagementTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -15,15 +16,18 @@ class BookReservationTest extends TestCase
      */
     public function a_book_can_be_added_to_the_library()
     {
-        $this->withoutExceptionHandling();
         $response = $this->post('/books', [
             'title' => 'Book 1',
             'isbn' => '123456789',
             'publication_date' => '2012-02-15',
         ]);
 
-        $response->assertOk();
+        $book = Book::first();
+
         $this->assertCount(1, Book::all());
+        $this->assertInstanceOf(Carbon::class, $book->publication_date);
+        $this->assertEquals('15/02/2012', $book->publication_date->format('d/m/Y'));
+        $response->assertRedirect($book->path());
     }
 
     /**
@@ -67,7 +71,7 @@ class BookReservationTest extends TestCase
 
         $response->assertSessionHasErrors('publication_date');
     }
-
+    
     /**
      * @test
      */
@@ -89,5 +93,28 @@ class BookReservationTest extends TestCase
 
         $this->assertEquals('New Title', Book::first()->title);
         $this->assertEquals('214521455', Book::first()->isbn);
+        $response->assertRedirect($book->fresh()->path());
+    
+    }
+
+    /**
+     * @test
+     */
+    public function a_book_can_be_deleted()
+    {
+        $this->post('/books', [
+            'title' => 'Title',
+            'isbn' => '123456789',
+            'publication_date' => '2012-02-15',
+        ]);
+
+        $book = BOOK::first();
+
+        $response = $this->delete('/books/' . $book->id);
+
+        $this->assertCount(0, Book::all());
+
+        $response->assertRedirect('/books');
+
     }
 }
