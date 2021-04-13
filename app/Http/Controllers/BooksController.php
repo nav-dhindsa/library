@@ -10,10 +10,23 @@ class BooksController extends Controller
 {
     public function store() 
     {
-        Book::create([
-            'title' => request('title'),
-            'isbn' => request('isbn'),
-            'publication_date' => request('publication_date'),
-        ]);
+      Book::create($this->validateRequest());
+    }
+
+    public function update(Book $book)
+    {
+      $book->update($this->validateRequest());
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function validateRequest()
+    {
+      return request()->validate([
+        'title' => 'required',
+        'isbn' => 'required',
+        'publication_date' => 'required',
+      ]);
     }
 }
