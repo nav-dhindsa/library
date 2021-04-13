@@ -20,4 +20,41 @@ class Book extends Model
     {
         return '/books' . $this->id;
     }
+
+    public function checkout(User $user) 
+    {
+        // update book status to available
+        $this->userActionLogs()->create([
+            'user_id' => $user->id,
+            'action' => 'CHECKOUT',
+        ]);
+
+        $this->update([
+            'title' => $this->title,
+            'isbn' => $this->isbn,
+            'publication_date' => $this->publication_date,
+            'status' => 'CHECKED_OUT',
+        ]);
+    }
+
+    public function checkin(User $user) 
+    {
+        // update book status to available
+        $this->userActionLogs()->create([
+            'user_id' => $user->id,
+            'action' => 'CHECKIN',
+        ]);
+
+        $this->update([
+            'title' => $this->title,
+            'isbn' => $this->isbn,
+            'publication_date' => $this->publication_date,
+            'status' => 'AVAILABLE',
+        ]);
+    }
+
+    public function userActionLogs()
+    {
+        return $this->hasMany(UserActionLog::class);
+    }
 }
