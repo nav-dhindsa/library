@@ -27,8 +27,7 @@ class BookReservationsTest extends TestCase
         $this->assertEquals($user->id, UserActionLog::first()->user_id);
         $this->assertEquals($book->id, UserActionLog::first()->book_id);
         $this->assertEquals('CHECKOUT', UserActionLog::first()->action);
-        $this->assertEquals('CHECKED_OUT', $book->fresh()->status);
-        
+        $this->assertEquals('CHECKED_OUT', $book->fresh()->status); 
     }
 
     /**

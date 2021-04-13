@@ -23,7 +23,6 @@ class Book extends Model
 
     public function checkout(User $user) 
     {
-        // update book status to available
         $this->userActionLogs()->create([
             'user_id' => $user->id,
             'action' => 'CHECKOUT',
@@ -39,7 +38,10 @@ class Book extends Model
 
     public function checkin(User $user) 
     {
-        // update book status to available
+        if ($this->status === 'AVAILABLE') {
+            abort(404);
+        } else {
+
         $this->userActionLogs()->create([
             'user_id' => $user->id,
             'action' => 'CHECKIN',
@@ -51,6 +53,7 @@ class Book extends Model
             'publication_date' => $this->publication_date,
             'status' => 'AVAILABLE',
         ]);
+        }
     }
 
     public function userActionLogs()

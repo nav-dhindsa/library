@@ -11,5 +11,6 @@ $factory->define(Book::class, function (Faker $faker) {
         'title' => $faker->sentence,
         'isbn' => $faker->isbn10,
         'publication_date' => now()->subYears(5),
+        'status' => 'AVAILABLE',
     ];
 });
