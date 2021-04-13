@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Book;
+use Auth;
 
 use Illuminate\Http\Request;
 
@@ -38,6 +39,37 @@ class BooksController extends Controller
     $book->delete();
 
     return redirect('/books');
+  }
+
+  public function action(Request $request)
+  {
+    $book = Book::where('isbn', '=', $request['isbn'])->first();
+    
+    if (empty($book)) {
+      return redirect('books')->with(['message' => 'Invalid ISBN number', 'alert' => 'alert-danger']);
+
+    }
+
+    
+    if ($request['action'] === 'checkin') {
+      if ($book->status === 'AVAILABLE') {
+        return redirect('books')->with(['message' => 'Book already checked out!', 'alert' => 'alert-danger']); 
+      } else {
+        $book->checkin(Auth::user());
+    
+      return redirect('books')->with(['message' => 'Book checked in successfully', 'alert' => 'alert-success']);
+      }
+    } else {
+      if ($book->status !== 'AVAILABLE') {
+        return redirect('books')->with(['message' => 'Book already checked out!', 'alert' => 'alert-danger']); 
+      } else {
+      $book->checkout(Auth::user());
+
+      return redirect('books')->with(['message' => 'Book checked out successfully', 'alert' => 'alert-success']);
+      }
+    }
+
+
   }
 
   /**
