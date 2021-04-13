@@ -93,10 +93,6 @@ class BookCheckoutTest extends TestCase
          $book = factory(Book::class)->create();
          $user = factory(User::class)->create();
  
-         $this->actingAs($user)
-             ->post('/checkin/' . $book->id)
-             ->assertStatus(404);
- 
          $this->assertCount(0, UserActionLog::all());
      }
 }
