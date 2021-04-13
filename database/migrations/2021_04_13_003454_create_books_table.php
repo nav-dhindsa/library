@@ -16,9 +16,9 @@ class CreateBooksTable extends Migration
         Schema::create('books', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('isbn');
+            $table->string('isbn')->unique();
             $table->string('publication_date');
-            $table->enum('status', ['CHECKED_OUT', 'AVAILABLE']);
+            $table->enum('status', ['CHECKED_OUT', 'AVAILABLE'])->default('AVAILABLE');
             $table->timestamps();
         });
     }
