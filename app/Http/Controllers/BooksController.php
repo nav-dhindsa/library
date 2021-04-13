@@ -8,9 +8,16 @@ use Illuminate\Http\Request;
 
 class BooksController extends Controller
 {
-  public function create()
+  /**
+   * Display a listing of the resource.
+   *
+   * @return \Illuminate\Http\Response the list view from the index.blade.php
+   */
+  public function index()
   {
-    return view('books.create');
+      $books=Book::Paginate(5);
+
+      return view('books.index', ['books' => $books]);
   }
 
   public function store() 

@@ -1,8 +1,14 @@
 @extends('layouts.app')
 
+@section('login_link')
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+</li>
+@endSection
+
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row align-items-center justify-content-center">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('Login') }}</div>
